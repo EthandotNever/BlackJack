@@ -1,0 +1,260 @@
+import random
+import sys
+import os
+import time
+import math
+
+player1 = []
+player2 = []
+player3 = []
+player4 = []
+player5 = []
+player6 = []
+player7 = []
+dealer = []
+pcards = [player1,player2,player3,player4,player5,player6,player7,dealer]
+suits = ["Hearts", "Clubs","Dianmonds","Spades"]
+val = ["Ace",2,3,4,5,6,7,8,9,10,"Jack","Queen","King"]
+deck =[]
+def dec(x,y):
+    for i in range(13):
+        for j in range(4):
+            it = val[i],suits[j]
+            deck.append(it)
+    return (deck[x:y])
+def shuf(x):
+    out = list(x)
+    c = 26
+    a = 0
+    for i in range(26):
+        out.pop()
+    for i in range(26):
+        out.insert(a,x[c])
+        if a >53 or c>51:
+            break
+        a = a +2
+        c = c+1
+    return out
+
+dec1 = dec(0,52)
+dec2 = shuf(dec1)
+
+
+
+def total(x,y):
+    t1 = 0
+    t2 = 0
+    valofvals=(11,10,10,10,10,9,8,7,6,5,4,3,2)
+    numbers= (1,2,3,4,5,6,7,8,9,10,11,13)
+    values= ("Ace","King","Queen","Jack",10,9,8,7,6,5,4,3,2)
+    for i in range(13):
+        if values[i] in  x:
+            t1 = valofvals[i]
+        if values[i] in y:
+            t2 = valofvals[i]
+    result = t1 + t2
+    return result
+def dtotal(x):
+    t1 = 0
+    values= ("Ace","King","Queen","Jack",10,9,8,7,6,5,4,3,2)
+    valofvals=(11,10,10,10,10,9,8,7,6,5,4,3,2)
+    for i in range(13):
+        if values[i] in  x:
+            t1 = valofvals[i]
+    result = t1
+    return result
+def hs():
+    hit = input("Hit or Stay? (Press \"S\" or \"H\")")
+    for i in range(cycle):
+        if hit == "H":
+            print(dec3[i])
+        if hit != "H" or hit == "S":
+            break
+        input("Hit or Stay? (Press \"S\" or \"H\")")
+        print(dec3[i])
+
+
+
+
+'''for i in range(100):
+    try:
+        players = int(input("Choose number of players.(1-7)\n"))
+        players = int(players)
+        if int(players)== False:
+            print("Please choose a number between 1 and 7.\n")
+        if players > 7 or players < 1:
+            print("Please choose a number between 1 and 7.\n")
+    except:
+       print("Please choose a number between 1 and 7.\n")
+       continue
+    if players >= 1 and players<=7:
+        break
+num = int(players)'''
+def check(list1, val):
+
+    # traverse in the list
+    for x in list1:
+
+        # compare with all the values
+        # with val
+        if val >= x:
+            return True
+    return False
+scores = []
+cycle = 0
+
+def deal():
+    dec3 = shuf(dec2)
+    k = random.randrange(9)
+    for i in range(k):
+        dec3 = shuf(dec3)
+    print(dec3)
+    card = 0
+
+
+    replay = True
+    while replay:
+        for i in range(100):
+            try:
+                players = int(input("Choose number of players.(1-7)\n"))
+                players = int(players)
+                if int(players)== False:
+                    print("Please choose a number between 1 and 7.\n")
+                if players > 7 or players < 1:
+                    print("Please choose a number between 1 and 7.\n")
+            except:
+               print("Please choose a number between 1 and 7.\n")
+               continue
+            if players >= 1 and players<=7:
+                break
+        num = int(players)
+
+        amt = 0
+        for i in range(num +1):
+
+            if i != 0:
+                print("Player %d: %s" % (i , dec3[card]))
+                pcards[amt].append(dec3[card])
+                card = card+1
+
+                print("         " , (dec3[card]))
+                pcards[amt].append(dec3[card])
+                scores.append(total(dec3[card-1], dec3[card]))
+                if scores[amt] == 21:
+                    print("BlackJack!!")
+                else:
+                    print("Player %d total: %s" % (i ,total(dec3[card-1], dec3[card])))
+
+                time.sleep(1)
+                card = card+1
+                amt = amt+1
+        print ("Dealer:" ,    dec3[card])
+        scores.append(dtotal(dec3[card]))
+        pcards[amt].append(dec3[card])
+        print("Dealer Total: %s" % dtotal(dec3[card]))
+        card = card +1
+        time.sleep(1)
+
+        cycle = 0
+        player = 1
+        amt=0
+        #This is to pring out the list representing each player's including the dealers set of cards print(pcards)
+        for j in range(num):
+
+            for i in range(5):
+                if scores[i] == 21:
+                    break
+                hit = input("Player %d Hit or Stay? \n Player %d Score: %d (Press \"H\" to hit or any button to stay.)" % (player,player,scores[player-1]))
+                if hit == "H":
+                    print("Player %d hits." % (player))
+                    scores[cycle]=scores[cycle] + (dtotal(dec3[card]))
+                    pcards[amt].append(dec3[card])
+                    print(dec3[card])
+                    print("Player %d Score: %s" % (player ,scores[cycle]))
+                    card = card+1
+
+                if scores[cycle] > 21:
+                    print("Player %d Busts!" % (player))
+                    card = card+1
+                    cycle =cycle + 1
+
+                    break
+                if hit != "H":
+                    print("Player %d stays." % (player))
+                    print("Player %d Score: %s" % (player,scores[cycle]))
+                    #card = card + 1
+                    cycle =cycle + 1
+
+                    break
+            player = player + 1
+            amt =amt+1
+        dc = (player*2)-2
+        print("Dealer Score: %d %s" % ((scores[-1]),(dec3[dc])))
+
+        time.sleep(1)
+        while scores[-1]<17 and  check(scores[0:cycle],21):
+            print("Dealer draws:" , (dec3[card]))
+            scores[-1]=scores[-1] + (dtotal(dec3[card]))
+            pcards[-1].append(dec3[card])
+            if scores[-1]== 21:
+                print("Dealer gets a natural 21.")
+
+            print("Dealer Score: %d" % (scores[-1]))
+            time.sleep(1)
+            card  = card + 1
+
+            #scores[-1] = dtotal(dec3[card]) + scores[-1]
+            #print(scores[-1])
+            if scores[-1] >= 17:
+                break
+        for i in range(len(scores)-1):
+            '''if i == player-1:
+                print("Dealer Score: %s" % (scores[-1]))'''
+            if i != player:
+                print("Player %d Score: %s" % ((i+1) ,scores[i]))
+        print(pcards)
+        print("Players equals %d" % (player))
+        print("num equals %d" % (num))
+        print("Cycle equals %d" % (cycle))
+        print("Scores equals %s" % (scores))
+        print("Cards equals: %d" % (card))
+        print(len(scores))
+        if scores[-1] > 21:
+            print("Dealer bust!")
+            for i in range(len(scores)-1):
+                if scores[i] <= 21:
+                    print("Player %d wins!" % (i+1))
+
+        elif max(scores) == scores[-1]:
+            print("Dealer wins.")
+            print("Players lose.")
+        for i in range(len(scores)-1):
+            if scores[i] > scores[-1]  and scores[i] < 22:
+                win = i+1
+                print("Player %d wins!" % (win))
+            if scores[i] > 21:
+                bust = i+1
+                print("Player %d busts!" % (bust))
+            if scores[i] == scores[-1] and scores[i] < 22 and scores[-1] < 22:
+                print("Player %d:Push!" % (i+1))
+            if scores[i] < scores[-1] and scores[-1] <22:
+                print("Player %d loses." % (i+1))
+        agn = input("Deal again? (y\\n)")
+        if agn != "y":
+
+
+            replay = False
+
+        elif agn == "y":
+            k = random.randrange(9)
+            for i in range(k):
+                dec3 = shuf(dec3)
+            card = 0
+            print(dec3)
+            print("The deck has now been shuffled.")
+            scores.clear()
+
+
+
+
+deal()
